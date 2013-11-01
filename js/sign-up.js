@@ -3,6 +3,8 @@
 
 // on doc ready 
 $(function(){
+	// makes input bar for "How Did You Hear About Us" hidden
+	$('input[name="refer-other"]').css("display","none");
 	// populating State selection
 	populateState();
 });
@@ -13,28 +15,79 @@ function populateState() {
 	$.each(usStates, function() {
 		var state = this["name"];
 		var abbrev = this["abbreviation"];
+		// creates new option for specific state
 		var optionText = "<option value=\"" + state + "\">" + abbrev + "</option>";
 		stateSelect.append(optionText);
 	});
+
 }
 
-/*validates that user entered Zip Code if they've 
-already entered address
+/* validates that user has entered Zip Code if they've 
+   already entered address before submitting;
+   also validates that user has enter first & last name
+   and email if on older versions of Safari or IE
 */
 $(".signup-form").submit(function(){
 	var signupForm = $(this);
 	var addr1Input = signupForm.find('input[name="addr-1"]');
 	var addr1Value = addr1Input.val();
+	// checks if address is entered
 	if(addr1Value.length > 0) {
 		var zipInput = signupForm.find('input[name="zip"]');
 		var zipVal = zipInput.val();
-		if(!(zipVal.length > 0)) {
+		// checks if zip code is entered
+		if(zipVal.length === 0) {
 			alert("Please enter a zipcode :)!");
 			return false;
 		}
 	}
+
+	// validates first, last, and email for older browsers
+	validateFields($('input[name="first-name"]'));
+	validateFields($('input[name="last-name"]'));
+	validateFields($('input[name="email"]'));
+
 });
 
+// validates that user has entered a value in "field"
+function validateFields(field) {
+	var reqField = signupForm.find(field);
+	var reqValue = reqField.val().trim();
+	if(0 === reqValue.length) {
+		alert("You must enter a " + reqFiled.attr("placeholder") + ".");
+	}
+}
+
+/* opens up modal when user tries to leave 
+*/
 $(".cancel-signup").click(function(){
-	window.location.replace("http://www.google.com");
+	$(".cancel-signup-modal").modal();
 }); //cancel-signup click
+
+/* redirects user to Google if they really 
+   really wants to leave
+*/
+$('.btn-abandon').click(function(){
+	window.location = "http://www.google.com";
+});
+
+/* if user selects "Other" in "How Did You Hear About Us",
+   shows a new input underneath select box.
+   else input remains disabled and displayless
+*/
+$('select[name="refer"]').change(function() {
+	var referSelect = $(this);
+	var otherInput = $('[name="refer-other"]');
+    /* if user has selected "Other", 
+       shows input underneath;
+       else keeps input disabled
+    */
+	if('other' === referSelect.val().toLowerCase()) {
+		otherInput.removeAttr('disabled');
+		otherInput.show();
+		otherInput.focus();
+	} else {
+		otherInput.attr('disabled', true);
+		otherInput.hide();
+	}
+});
