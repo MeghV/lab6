@@ -84,11 +84,8 @@ $('select[name="refer"]').change(function() {
     // if user has selected "Other", shows input underneath;
     // else keeps input disabled
 	if('other' === referSelect.val().toLowerCase()) {
-		otherInput.removeAttr('disabled');
-		otherInput.show();
-		otherInput.focus();
+		otherInput.removeAttr('disabled').show().focus();
 	} else {
-		otherInput.attr('disabled', true);
-		otherInput.hide();
+		otherInput.attr('disabled', true).hide();
 	}
 });
