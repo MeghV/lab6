@@ -2,11 +2,12 @@
     use this for any custom styles
 */
 
-footer {
+.footer {
 	padding-top: 30px;
     bottom: 0;
     width: 100%;
 }
-footer a{
+
+.footer a{
     width: 100%; ;
 }
