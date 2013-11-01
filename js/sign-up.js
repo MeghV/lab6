@@ -1,11 +1,10 @@
 //signup.js 
-// add your JavaScript code to this file
 
 // on doc ready 
 $(function(){
 	// makes input bar for "How Did You Hear About Us" hidden
 	$('input[name="refer-other"]').css("display","none");
-	// populating State selection
+	// populates State select box
 	populateState();
 });
 
@@ -13,10 +12,8 @@ $(function(){
 function populateState() {
 	var stateSelect = $(".us-states");
 	$.each(usStates, function() {
-		var state = this["name"];
-		var abbrev = this["abbreviation"];
-		// creates new option for specific state
-		var optionText = "<option value=\"" + state + "\">" + abbrev + "</option>";
+		// creates new option for specific state, then appends into select box
+		var optionText = "<option value=\"" + this["name"] + "\">" + this["abbreviation"] + "</option>";
 		stateSelect.append(optionText);
 	});
 
@@ -29,12 +26,12 @@ function populateState() {
 */
 $(".signup-form").submit(function(){
 	var signupForm = $(this);
-	var addr1Input = signupForm.find('input[name="addr-1"]');
-	var addr1Value = addr1Input.val();
+	// finds value of address box
+	var addr1Value = value(signupForm, 'input[name="addr-1"]');
 	// checks if address is entered
 	if(addr1Value.length > 0) {
-		var zipInput = signupForm.find('input[name="zip"]');
-		var zipVal = zipInput.val();
+		// if addressed entered, finds value of zip code box
+		var zipVal = value(signupForm, 'input[name="zip"]');
 		// checks if zip code is entered
 		if(zipVal.length === 0) {
 			alert("Please enter a zipcode :)!");
@@ -42,12 +39,18 @@ $(".signup-form").submit(function(){
 		}
 	}
 
-	// validates first, last, and email for older browsers
+	// validates first, last, and email for older browsers that 
+	// don't support "required" attribute
 	validateFields($('input[name="first-name"]'));
 	validateFields($('input[name="last-name"]'));
 	validateFields($('input[name="email"]'));
-
 });
+
+// returns the value of a specific input field within the passed form
+function value(form, inputField) {
+	var getInput = form.find(inputField);
+	return getInput.val();
+}
 
 // validates that user has entered a value in "field"
 function validateFields(field) {
@@ -78,10 +81,8 @@ $('.btn-abandon').click(function(){
 $('select[name="refer"]').change(function() {
 	var referSelect = $(this);
 	var otherInput = $('[name="refer-other"]');
-    /* if user has selected "Other", 
-       shows input underneath;
-       else keeps input disabled
-    */
+    // if user has selected "Other", shows input underneath;
+    // else keeps input disabled
 	if('other' === referSelect.val().toLowerCase()) {
 		otherInput.removeAttr('disabled');
 		otherInput.show();
